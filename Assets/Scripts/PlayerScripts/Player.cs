@@ -6,6 +6,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private int _health, _maxHealth = 100;
+    [SerializeField] private Healthbar healthbar;
+
     public int Health
     {
         get 
@@ -15,19 +17,15 @@ public class Player : MonoBehaviour
         set
         {
             _health = value;
-            GameEvents.Instance.InvokePlayerHealthChanged(Health);
+            //GameEvents.Instance.InvokePlayerHealthChanged(Health, _maxHealth);
         }
     }
     void Start()
     {
         Health = _maxHealth;
+        healthbar.UpdateHealthbar(Health, _maxHealth);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     public void TakeDamage(int damage)
     {
         Health -= damage;
@@ -35,10 +33,12 @@ public class Player : MonoBehaviour
         {
             DeathPlayer();
         }
+        healthbar.UpdateHealthbar(Health, _maxHealth);
     }
 
     private void DeathPlayer()
     {
-        //тут игрок будет умирать
+        gameObject.SetActive(false);
     }
+    
 }

@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class GameEvents : MonoBehaviour
 {
     public static GameEvents Instance;
-    public event Action<float> OnPlayerHealthChanged;
+    public event Action OnItemAdded;
     void Awake()
     {
         if (Instance == null)
@@ -20,8 +21,9 @@ public class GameEvents : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void InvokePlayerHealthChanged(int currentHealth)
+    public void InvokeInventoryChange()
     {
-        OnPlayerHealthChanged?.Invoke(currentHealth);
-    }
+        OnItemAdded?.Invoke();
+    }    
+
 }

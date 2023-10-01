@@ -1,15 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    public static Inventory instance;
     [SerializeField] private GameObject inventoryPanel;
     [SerializeField] List<Item> StartItems = new List<Item>();
-    public List<Item> Items = new List<Item>();
-    void Start()
+
+    public Dictionary<Item, int> ItemsDic = new Dictionary<Item, int>();
+    
+
+    void Awake()
     {
+        instance = this;
         for (var i = 0 ; i < StartItems.Count; i++)
         {
             AddItem(StartItems[i]);
@@ -18,9 +24,16 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(Item item)
     {
-       Items.Add(item);
+        if (ItemsDic.ContainsKey(item))
+        {
+            ItemsDic[item]++;
+        }
+        else
+        {
+            ItemsDic[item] = 1;
+        }
+        GameEvents.Instance.InvokeInventoryChange();
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -30,9 +43,16 @@ public class Inventory : MonoBehaviour
     {
         inventoryPanel.SetActive(!inventoryPanel.activeSelf);
     }
-    public void RemoveItem(int index)
+    public void RemoveItem(Item item)
     {
-        Debug.Log(index);
-        Items.RemoveAt(index);
+        if (ItemsDic.ContainsKey(item))
+        {
+            ItemsDic[item]--;
+            if (ItemsDic[item] == 0)
+            {
+                ItemsDic.Remove(item);
+                GameEvents.Instance.InvokeInventoryChange();
+            }
+        }
     }
 }

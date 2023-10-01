@@ -10,7 +10,7 @@ public class Healthbar : MonoBehaviour
     {
         _slider = GetComponent<Slider>();
     }
-    private void OnEnable()
+    /*private void OnEnable()
     {
         GameEvents.Instance.OnPlayerHealthChanged += UpdateHealthbar;
     }
@@ -18,10 +18,10 @@ public class Healthbar : MonoBehaviour
     {
         GameEvents.Instance.OnPlayerHealthChanged -= UpdateHealthbar;
 
-    }
+    }*/
     // Update is called once per frame
-    void UpdateHealthbar(float currentHealth)
+    public void UpdateHealthbar(float currentHealth, float maxHealth)
     {
-        _slider.value = currentHealth/100;
+        _slider.value = currentHealth/ maxHealth;
     }
 }

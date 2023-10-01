@@ -5,35 +5,44 @@ using UnityEngine.UI;
 
 public class InventoryPanel : MonoBehaviour
 {
-    [SerializeField] Inventory targetInventory;
     [SerializeField] RectTransform itemsPanel;
+    [SerializeField] GameObject InventoryPrafeb;
 
     List<GameObject> drawnButtons = new List<GameObject>();
     void Start()
     {
         Redraw();
     }
-
+    private void OnEnable()
+    {
+        GameEvents.Instance.OnItemAdded += Redraw;
+    }
     // Update is called once per frame
-    void Redraw()
+    public void Redraw()
     {
         ClearDrawn();
-        for (var i = 0; i < targetInventory.Items.Count; i++)
+        foreach (var i in Inventory.instance.ItemsDic)
         {
-            int index = i;
-            var item = targetInventory.Items[i];
-            var buttonItem = new GameObject(item.name);
+           
+           /*
+            var buttonItem = new GameObject();
             Button buttonComponent = buttonItem.AddComponent<Button>();
             buttonItem.AddComponent<Image>().sprite = item.icon;
+            */
+            var item = i;
+            var buttonItem = Instantiate(InventoryPrafeb, itemsPanel);
             buttonItem.transform.SetParent(itemsPanel);
-            buttonComponent.onClick.AddListener(() => OnClickHandler(index, buttonItem));
+            buttonItem.GetComponent<Image>().sprite = item.Key.icon;
+            buttonItem.GetComponent<InventoryButton>().item = item.Key;
+            buttonItem.GetComponent<InventoryButton>().count = item.Value;
+           // buttonComponent.onClick.AddListener(() => OnInventoryButtonClick(index, buttonItem));
             drawnButtons.Add(buttonItem);
         }
     }
     // Метод-обработчик события OnClick
-    void OnClickHandler(int index, GameObject button)
+    public void OnInventoryButtonClick(int index, GameObject button)
     {
-        GameObject buttonGameObject = new GameObject("MyButton");
+        /*GameObject buttonGameObject = new GameObject("MyButton");
 
         Button buttonComponent = buttonGameObject.AddComponent<Button>();
 
@@ -51,13 +60,9 @@ public class InventoryPanel : MonoBehaviour
         textGameObject.transform.SetParent(buttonGameObject.transform, false);
 
         // Добавьте обработчик события OnClick для кнопки
-        buttonComponent.onClick.AddListener(() => OnClickHandler2(index));
+        //buttonComponent.onClick.AddListener(() => OnDeleteButtonClick(index));*/
     }
-    void OnClickHandler2(int index)
-    {
-        targetInventory.RemoveItem(index);
-        Redraw();
-    }
+    
     void ClearDrawn()
     {
         for (var i = 0;i < drawnButtons.Count;i++)
