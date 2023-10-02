@@ -12,14 +12,18 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float attackRange;
     [SerializeField] private float detectionRange;
     [SerializeField] private int attackDamage;
-    private Vector3 offset = new Vector3 (0.6f, 0, 0);
+
     public Rigidbody2D target;
-    public Rigidbody2D rb;
+
+    private Rigidbody2D rb;
     private LootSystem lootSystem;
-    
+    private Animator animator;
+    private float ellapsedTime = 3f;
+    private float attackCD = 3f;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();   
+        animator = GetComponent<Animator>();
         healthbar.UpdateHealthbar(health, maxHealth);
         lootSystem = FindObjectOfType<LootSystem>();
     }
@@ -44,7 +48,7 @@ public class Enemy : MonoBehaviour
     }
     private void Update()
     {
-        if (target == null)
+        if (!target.gameObject.activeSelf)
         {
             transform.position = this.transform.position;
             return;
@@ -75,15 +79,26 @@ public class Enemy : MonoBehaviour
 
     private void AttackPlayer()
     {
-        target.GetComponent<Player>().TakeDamage(attackDamage);
-        transform.position = this.transform.position - offset;
+        if (ellapsedTime >= attackCD)
+        {
 
+            target.GetComponent<Player>().TakeDamage(attackDamage);
+            Vector3 direction = target.position - rb.position;
+            target.GetComponent<Player>().Punch(direction, 1500);
+
+            ellapsedTime = 0;
+        }
+        else
+        {
+            ellapsedTime += Time.deltaTime;
+        }
     }
 
     void MoveTowardsTarget()
     {
         // Направление к цели (игроку)
         Vector3 direction = (target.position - rb.position).normalized;
+        animator.SetFloat("Rotation", direction.x);
         // Двигаем монстра
         transform.Translate(direction * speed * Time.deltaTime);
     }

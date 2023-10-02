@@ -26,8 +26,8 @@ public class EnemySpawner : MonoBehaviour
             randEnemy = Random.Range(0, enemyPrefabs.Count);
             _enemy = enemyPrefabs[randEnemy];
 
-            float posX = Random.Range(-37f, 130f);
-            float posY = Random.Range(8.4f, -15.7f);
+            float posX = Random.Range(-20f, 25);
+            float posY = Random.Range(6f, -7f);
             var spawnedEnemy = Instantiate(_enemy, new Vector3(posX, posY, 0), Quaternion.identity);
             spawnedEnemy.GetComponent<Enemy>().GiveTarget(player);
         }

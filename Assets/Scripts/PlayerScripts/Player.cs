@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private int _health, _maxHealth = 100;
     [SerializeField] private Healthbar healthbar;
 
+    private int _health, _maxHealth = 100;
+    Rigidbody2D rb;
     public int Health
     {
         get 
@@ -17,13 +18,13 @@ public class Player : MonoBehaviour
         set
         {
             _health = value;
-            //GameEvents.Instance.InvokePlayerHealthChanged(Health, _maxHealth);
         }
     }
     void Start()
     {
         Health = _maxHealth;
         healthbar.UpdateHealthbar(Health, _maxHealth);
+        rb = GetComponent<Rigidbody2D>();
     }
 
     public void TakeDamage(int damage)
@@ -40,5 +41,9 @@ public class Player : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
-    
+
+    public void Punch(Vector3 direction, float power)
+    {
+        rb.AddForce(direction * power);
+    }
 }

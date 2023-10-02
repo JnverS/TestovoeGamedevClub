@@ -5,17 +5,13 @@ using UnityEngine;
 public class PickUpObject : MonoBehaviour
 {
     public Item item;
-    private GameObject itemObj;
-    private void Start()
-    {
-        itemObj = gameObject;
-    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            gameObject.SetActive(false);
             Inventory.instance.AddItem(item);
+            Destroy(gameObject);
         }
     }
 }

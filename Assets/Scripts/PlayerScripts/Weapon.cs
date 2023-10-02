@@ -9,8 +9,8 @@ public class Weapon : MonoBehaviour
     public Joystick joystick;
     public Transform WeaponPosinion;
     public GameObject bullet;
-    public TMP_Text bulletText;
 
+    [SerializeField] private TMP_Text bulletText;
     [SerializeField] private float speed;
     [SerializeField] private float offset;
 
@@ -31,8 +31,18 @@ public class Weapon : MonoBehaviour
 
     void FixedUpdate()
     {
-        float rotatez = Mathf.Atan2(dirY, dirX) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, rotatez + offset);
+        if (dirX != 0 && dirY != 0)
+        {
+            float rotatez = Mathf.Atan2(dirY, dirX) * Mathf.Rad2Deg;
+            if ((rotatez < 30 && rotatez > -50) ) 
+            {
+                transform.eulerAngles = new Vector3(0, 0, rotatez);
+            }
+            else if ((rotatez > 135 && rotatez < 180) || (rotatez < -135 && rotatez > -180))
+            {
+                transform.localRotation = Quaternion.Euler(0, 0, 180 - rotatez);
+            }
+        }
     }
     public void Shooting()
     {
@@ -44,13 +54,12 @@ public class Weapon : MonoBehaviour
         }
         if (bulletCount == 0)
             StartCoroutine(Ñooldown());
-        
+
     }
     IEnumerator Ñooldown()
     {
         yield return new WaitForSeconds(timer);
         bulletCount = maxBulletInMagazine;
-        
     }
 
 }

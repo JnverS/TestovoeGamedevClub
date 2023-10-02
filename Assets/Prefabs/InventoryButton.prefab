@@ -283,10 +283,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d62f70d84cb4547927a843f09fc2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
+  itemSlot:
+    id: 0
+    item: {fileID: 0}
+    count: 0
   delete: {fileID: 3298170343462008580}
   count: 0
-  inventoryPanel: {fileID: 0}
 --- !u!1 &3298170343462008580
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,7 +520,7 @@ MonoBehaviour:
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 10
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
